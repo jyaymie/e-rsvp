@@ -1,0 +1,3 @@
+.home__text-highlighted {
+	background: linear-gradient(to top, var(--yellow-color) 50%, transparent 50%);
+}
