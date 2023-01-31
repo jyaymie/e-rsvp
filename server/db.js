@@ -34,24 +34,25 @@ function createTables(newdb) {
 		`CREATE TABLE guest (
       guest_id INTEGER PRIMARY KEY NOT NULL,
       name TEXT NOT NULL,
-      attending INTEGER,
-      need_hotel INTEGER,
+      email TEXT NOT NULL,
+      is_attending INTEGER,
+      needs_hotel INTEGER,
       entree TEXT,
-      food_exceptions TEXT,
+      food_restrictions TEXT,
       song_request TEXT
     );
 
-    INSERT INTO guest (guest_id, name, attending, need_hotel, entree, food_exceptions, song_request)
-      VALUES (1, 'Michael Scott', 1, 1, 'Beef', '', '"Seasons of Love" by Rent'),
-          (2, 'Dwight Schrute', 1, 0, 'Chicken', '', '"Wild Side" by Mötley Crüe'),
-          (3, 'Angela Martin', 1, 0, 'Vegetarian', 'Developed an allergy to beets', '"The Little Drummer Boy"'),
-          (4, 'Roy Anderson', 0, '', '', '', ''),
-          (5, 'Karen Filippelli', 0, '', '', '', ''),
-          (6, 'Andy Bernard', 1, 1, 'Fish', '', '"Faith" by George Michael'),
-          (7, 'Erin Hannon', 1, 0, 'Chicken', '', ''),
-          (8, 'Kelly Kapoor', 1, 0, 'Chicken', '', '"Hollaback Girl" by Gwen Stefani'),
-          (9, 'Ryan Howard', 1, 0, 'Beef', 'Only organic food please', ''),
-          (10, 'Kevin Malone', 1, 1, 'Chicken', '', '"You Oughta Know" by Alanis Morissette');
+    INSERT INTO guest (guest_id, name, email, is_attending, needs_hotel, entree, food_restrictions, song_request)
+      VALUES (1, 'Michael Scott', 'michael@email.com', 0, 0, '', '', ''),
+          (2, 'Dwight Schrute', 'dwight@email.com', 0, 0, '', '', ''),
+          (3, 'Angela Martin', 'dwight@email.com', 0, 0, '', '', ''),
+          (4, 'Roy Anderson', 'roy@email.com', 0, 0, '', '', ''),
+          (5, 'Karen Filippelli', 'karen@email.com', 0, 0, '', '', ''),
+          (6, 'Andy Bernard', 'andy@email.com', 0, 0, '', '', ''),
+          (7, 'Erin Hannon', 'erin@email.com', 0, 0, '', '', ''),
+          (8, 'Kelly Kapoor', 'kelly@email.com', 0, 0, '', '', ''),
+          (9, 'Ryan Howard', 'kelly@email.com', 0, 0, '', '', ''),
+          (10, 'Kevin Malone', 'kevin@email.com', 0, 0, '', '', '');
     
     CREATE TABLE plus_one (
       guest_id INTEGER NOT NULL,
