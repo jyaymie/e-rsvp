@@ -13,10 +13,12 @@ interface IGuest {
 }
 
 const RSVP: React.FC = () => {
+	const [isHidden, setIsHidden] = useState<boolean>(false);
 	const [error, setError] = useState<string>('');
 	const [isAttending, setIsAttending] = useState<string>('');
 	const [needsHotel, setNeedsHotel] = useState<string>('');
 	const [hasFoodRestrictions, setHasFoodRestrictions] = useState<string>('');
+	const [isClicked, setIsClicked] = useState<boolean>(false);
 
 	const [guest, setGuest] = useState<IGuest>({
 		guest_id: '',
@@ -29,10 +31,12 @@ const RSVP: React.FC = () => {
 		song_request: '',
 	});
 
+	// Confirm that guest has been added to DB by host.
 	const confirmGuest = async (email: string) => {
 		const res = await axios.get(`http://localhost:3001/guests?email=${email}`);
 		if (res.data.rows.length) {
 			setGuest(res.data.rows[0]);
+			setIsHidden(!isHidden);
 		} else {
 			setError('Please check that your email is correct.');
 		}
@@ -40,37 +44,47 @@ const RSVP: React.FC = () => {
 
 	const handleAttendance = (attendance: string) => {
 		setIsAttending(attendance);
+		// With SQLite, Boolean values are stored as integers 0 (false) and 1 (true).
 		setGuest({ ...guest, is_attending: isAttending === 'accepts' ? 1 : 0 });
 	};
 
 	const handleHotelRequest = (hotelRequest: string) => {
 		setNeedsHotel(hotelRequest);
+		// With SQLite, Boolean values are stored as integers 0 (false) and 1 (true).
 		setGuest({ ...guest, needs_hotel: needsHotel === 'yes' ? 1 : 0 });
 	};
 
 	return (
 		<div className='rsvp component'>
 			<form className='form'>
-				<p>Please enter your email:</p>
-				<input
-					type='text'
-					name='email'
-					value={guest.email}
-					onChange={(e) => setGuest({ ...guest, email: e.target.value })}
-					required
-				/>
-				<button
-					type='button'
-					value='Next'
-					onClick={() => confirmGuest(guest.email)}>
-					NEXT
-				</button>
+				<div className={isHidden ? 'form__input--hidden' : ''}>
+					<p>Please enter your email:</p>
+					<div className='form__input--display-flex'>
+						<input
+							className='form__input'
+							type='text'
+							name='email'
+							value={guest.email}
+							onChange={(e) => setGuest({ ...guest, email: e.target.value })}
+							required
+						/>
+						<button
+							className='button'
+							type='button'
+							value='Next'
+							onClick={() => confirmGuest(guest.email)}>
+							NEXT
+						</button>
+					</div>
+				</div>
 
-				{/* If guest is on the guest list, display input fields. Else, display error message. */}
+				{/* If guest is in DB, display input fields re: attendance. Else, display error message. */}
 
 				{guest.guest_id && (
 					<div>
-						<div className='form__input-radio'>
+						<p>Hi, {guest.name}!</p>
+						<p>Will you be attending the wedding?</p>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='yesAttendance'
@@ -81,7 +95,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='yesAttendance'>Accepts</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='noAttendance'
@@ -97,12 +111,12 @@ const RSVP: React.FC = () => {
 
 				{error && <p>{error}</p>}
 
-				{/* If guest is attending, display input fields. Else, enable Submit button. */}
+				{/* If guest is attending, display input fields re: hotel. Else, enable Submit button. */}
 
 				{isAttending === 'accepts' && (
 					<>
 						<p>Do you need hotel accommodations?</p>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='noHotelRequest'
@@ -113,7 +127,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='noHotelRequest'>No</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='yesHotelRequest'
@@ -124,9 +138,21 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='yesHotelRequest'>Yes</label>
 						</div>
+					</>
+				)}
 
+				{isAttending === 'regrets' && (
+					<button type='submit' value='Submit' className='button'>
+						SUBMIT
+					</button>
+				)}
+
+				{/* Once guest provides response re: hotel, display input fields re: entree. */}
+
+				{isAttending === 'accepts' && needsHotel && (
+					<>
 						<p>Please select your entree:</p>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='beef'
@@ -137,7 +163,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='beef'>Beef</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='chicken'
@@ -148,7 +174,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='chicken'>Chicken</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='fish'
@@ -159,7 +185,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='fish'>Fish</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='vegetarian'
@@ -169,8 +195,15 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='vegetarian'>Vegetarian</label>
 						</div>
+					</>
+				)}
+
+				{/* Once guest provides response re: entree, display input fields re: food restrictions. */}
+
+				{isAttending === 'accepts' && guest.entree && (
+					<>
 						<p>Any allergies or dietary restrictions?</p>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='noFoodRestrictions'
@@ -181,7 +214,7 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='noFoodRestrictions'>No</label>
 						</div>
-						<div className='form__input-radio'>
+						<div className='form__input--radio'>
 							<input
 								type='radio'
 								id='yesFoodRestrictions'
@@ -192,43 +225,51 @@ const RSVP: React.FC = () => {
 							/>
 							<label htmlFor='yesFoodRestrictions'>Yes</label>
 						</div>
+					</>
+				)}
 
-						{/* If there are food restrictions, display text area.*/}
+				{/* If there are food restrictions, display text area.*/}
 
-						{hasFoodRestrictions === 'yes' && (
-							<textarea
-								name='foodRestrictions'
-								value={guest.food_restrictions}
-								onChange={(e) =>
-									setGuest({ ...guest, food_restrictions: e.target.value })
-								}
-								className='form__input-textarea'
-								required
-							/>
-						)}
-
-						<p>{'Song Request (Optional)'}</p>
+				{isAttending === 'accepts' && hasFoodRestrictions === 'yes' && (
+					<>
 						<textarea
-							name='song'
-							value={guest.song_request}
+							className='form__input--textarea'
+							name='foodRestrictions'
+							value={guest.food_restrictions}
 							onChange={(e) =>
-								setGuest({ ...guest, song_request: e.target.value })
+								setGuest({ ...guest, food_restrictions: e.target.value })
 							}
-							className='form__input-textarea'
+							required
 						/>
-
-						<button type='submit' value='Submit'>
-							SUBMIT
+						<button
+							className={isClicked ? 'button--hidden' : 'button'}
+							type='button'
+							value='Next'
+							onClick={() => setIsClicked(!isClicked)}>
+							NEXT
 						</button>
 					</>
 				)}
 
-				{isAttending === 'regrets' && (
-					<button type='submit' value='Submit'>
-						SUBMIT
-					</button>
-				)}
-        
+				{/* If guest has no food restrictions or enters details re: food restrictions, display final input field re: song request. */}
+
+				{isAttending === 'accepts' &&
+					(hasFoodRestrictions === 'no' || isClicked) && (
+						<>
+							<p>{'Song Request (Optional)'}</p>
+							<textarea
+								className='form__input--textarea'
+								name='song'
+								value={guest.song_request}
+								onChange={(e) =>
+									setGuest({ ...guest, song_request: e.target.value })
+								}
+							/>
+							<button type='submit' value='Submit' className='button'>
+								SUBMIT
+							</button>
+						</>
+					)}
 			</form>
 		</div>
 	);

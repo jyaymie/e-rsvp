@@ -1,7 +1,19 @@
+p {
+	margin: 0 0 10px 0;
+}
+
 .component {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+
+.button {
+	margin-bottom: 10px;
+}
+
+.button--hidden {
+	display: none;
 }
 
 .form {
@@ -10,7 +22,24 @@
 	width: 50%;
 }
 
-.form__input-textarea {
-  height: 50px;
-  width: 100%;
+.form__input {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.form__input--display-flex {
+	display: flex;
+}
+
+.form__input--hidden {
+	display: none;
+}
+
+.form__input--radio {
+	margin-bottom: 10px;
+}
+
+.form__input--textarea {
+	height: 50px;
+	width: 100%;
 }

@@ -17,7 +17,7 @@ const Home: React.FC = () => {
 		<div className='home component'>
 			<p>
 				You're invited to{' '}
-				<span className='home__text-highlighted'>PB + J's Wedding</span>!
+				<span className='home__text--highlighted'>PB + J's Wedding</span>!
 			</p>
 
 			<form className='form' onSubmit={(e) => handleSubmit(e)}>
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
 					onChange={(e) => setPassword(e.target.value)}
 					required
 				/>
-				<button type='submit' value='Submit'>
+				<button type='submit' value='Submit' className='button--submit'>
 					Submit
 				</button>
 			</form>

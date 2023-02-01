@@ -36,7 +36,7 @@ const SignIn: React.FC = () => {
 					onChange={(e) => setHost({ ...host, password: e.target.value })}
 					required
 				/>
-				<button type='submit' value='Submit'>
+				<button type='submit' value='Submit' className='button--submit'>
 					Submit
 				</button>
 			</form>
