@@ -43,16 +43,16 @@ function createTables(newdb) {
     );
 
     INSERT INTO guest (guest_id, name, email, is_attending, needs_hotel, entree, food_restrictions, song_request)
-      VALUES (1, 'Michael Scott', 'michael@email.com', 0, 0, '', '', ''),
-          (2, 'Dwight Schrute', 'dwight@email.com', 0, 0, '', '', ''),
-          (3, 'Angela Martin', 'dwight@email.com', 0, 0, '', '', ''),
-          (4, 'Roy Anderson', 'roy@email.com', 0, 0, '', '', ''),
-          (5, 'Karen Filippelli', 'karen@email.com', 0, 0, '', '', ''),
-          (6, 'Andy Bernard', 'andy@email.com', 0, 0, '', '', ''),
-          (7, 'Erin Hannon', 'erin@email.com', 0, 0, '', '', ''),
-          (8, 'Kelly Kapoor', 'kelly@email.com', 0, 0, '', '', ''),
-          (9, 'Ryan Howard', 'kelly@email.com', 0, 0, '', '', ''),
-          (10, 'Kevin Malone', 'kevin@email.com', 0, 0, '', '', '');
+      VALUES (1, 'Michael Scott', 'michael@email.com', null, null, '', '', ''),
+          (2, 'Dwight Schrute', 'dwight@email.com', null, null, '', '', ''),
+          (3, 'Angela Martin', 'dwight@email.com', null, null, '', '', ''),
+          (4, 'Roy Anderson', 'roy@email.com', null, null, '', '', ''),
+          (5, 'Karen Filippelli', 'karen@email.com', null, null, '', '', ''),
+          (6, 'Andy Bernard', 'andy@email.com', null, null, '', '', ''),
+          (7, 'Erin Hannon', 'erin@email.com', null, null, '', '', ''),
+          (8, 'Kelly Kapoor', 'kelly@email.com', null, null, '', '', ''),
+          (9, 'Ryan Howard', 'kelly@email.com', null, null, '', '', ''),
+          (10, 'Kevin Malone', 'kevin@email.com', null, null, '', '', '');
     
     CREATE TABLE plus_one (
       guest_id INTEGER NOT NULL,

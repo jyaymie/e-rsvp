@@ -22,6 +22,10 @@ p {
 	width: 50%;
 }
 
+.form--hidden {
+	display: none;
+}
+
 .form__input {
 	width: 100%;
 	margin-bottom: 10px;
