@@ -1,16 +1,15 @@
 import { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { DataContext, IGuest } from '../dataContext';
 import EmailInput from './wizard/EmailInput';
 import AttendanceInput from './wizard/AttendanceInput';
 import HotelInput from './wizard/HotelInput';
 import EntreeInput from './wizard/EntreeInput';
-import RestrictionsInput from './wizard/RestrictionsInput';
+import FoodInput from './wizard/FoodInput';
 import SongInput from './wizard/SongInput';
 
 const RsvpForm: React.FC = () => {
-	const { formState, setFormState, guest } = useContext(DataContext);
+	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
 
 	useEffect(() => {
 		setFormState({
@@ -19,19 +18,51 @@ const RsvpForm: React.FC = () => {
 			isInputHidden: false,
 			error: '',
 			hasFoodRestrictions: null,
-			isClicked: false,
+			isClickedForFoodRestrictions: false,
 			isSubmitted: false,
 		});
 	}, []);
 
 	const handleSubmit = async (e: React.FormEvent, guest: IGuest) => {
 		e.preventDefault();
+		if (!formState.hasFoodRestrictions) {
+			setGuest({ ...guest, food_restrictions: '' });
+		}
+		if (guest.is_attending === 0) {
+			setGuest({
+				...guest,
+				needs_hotel: null,
+				entree: '',
+				food_restrictions: '',
+				song_request: '',
+			});
+		}
 		const res = await axios.put(
 			`http://localhost:3001/guests/${guest.guest_id}`,
 			guest
 		);
 		if (res.status === 200) {
 			setFormState({ ...formState, isFormHidden: true, isSubmitted: true });
+		}
+	};
+
+	const handleClickToEdit = () => {
+		if (guest.food_restrictions === '') {
+			setFormState({
+				...formState,
+				isFormHidden: false,
+				isInputHidden: true,
+				hasFoodRestrictions: false,
+				isSubmitted: false,
+			});
+		} else {
+			setFormState({
+				...formState,
+				isFormHidden: false,
+				isInputHidden: true,
+				hasFoodRestrictions: true,
+				isSubmitted: false,
+			});
 		}
 	};
 
@@ -44,7 +75,7 @@ const RsvpForm: React.FC = () => {
 
 				{/* If guest is in DB, display input fields re: attendance. Else, display error message. */}
 
-				{guest.guest_id && !formState.isReturning && <AttendanceInput />}
+				{guest.guest_id && <AttendanceInput />}
 
 				{formState.error && <p>{formState.error}</p>}
 
@@ -52,7 +83,7 @@ const RsvpForm: React.FC = () => {
 
 				{guest.is_attending === 1 && <HotelInput />}
 
-				{guest.is_attending === 0 && !formState.isReturning && (
+				{guest.is_attending === 0 && (
 					<button type='submit' value='Submit' className='button'>
 						SUBMIT
 					</button>
@@ -66,14 +97,13 @@ const RsvpForm: React.FC = () => {
 
 				{/* Once guest provides response re: entree, display input fields re: food restrictions. */}
 
-				{guest.is_attending === 1 && guest.entree && <RestrictionsInput />}
+				{guest.is_attending === 1 && guest.entree && <FoodInput />}
 
 				{/* If guest has no food restrictions or enters details re: food restrictions, display final input field re: song request. */}
 
 				{guest.is_attending === 1 &&
-					(formState.hasFoodRestrictions === false || formState.isClicked) && (
-						<SongInput />
-					)}
+					(formState.hasFoodRestrictions === false ||
+						formState.isClickedForFoodRestrictions) && <SongInput />}
 			</form>
 
 			{guest.is_attending === 1 && formState.isSubmitted && (
@@ -81,7 +111,14 @@ const RsvpForm: React.FC = () => {
 					<p>Hooray, {guest.name}! We look forward to celebrating with you.</p>
 					<p>
 						Need to make changes? Click
-						<Link to={'/edit-rsvp/' + guest.guest_id}>here</Link>.
+						<button
+							className='button'
+							type='button'
+							value='here'
+							onClick={handleClickToEdit}>
+							here
+						</button>
+						.
 					</p>
 				</>
 			)}
@@ -94,7 +131,13 @@ const RsvpForm: React.FC = () => {
 					</p>
 					<p>
 						Need to make changes? Click{' '}
-						<Link to={'/edit-rsvp/' + guest.guest_id}>here</Link>.
+						<button
+							className='button'
+							type='button'
+							value='here'
+							onClick={handleClickToEdit}>
+							here
+						</button>
 					</p>
 				</>
 			)}

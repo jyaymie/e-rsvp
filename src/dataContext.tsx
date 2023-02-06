@@ -6,7 +6,7 @@ export interface IFormState {
 	isInputHidden: boolean;
 	error: string;
 	hasFoodRestrictions: boolean | null;
-	isClicked: boolean;
+	isClickedForFoodRestrictions: boolean;
 	isSubmitted: boolean;
 }
 
@@ -35,7 +35,7 @@ export const DataContext = createContext<{
 		isInputHidden: false,
 		error: '',
 		hasFoodRestrictions: null,
-		isClicked: false,
+		isClickedForFoodRestrictions: false,
 		isSubmitted: false,
 	},
 	setFormState: () => {},

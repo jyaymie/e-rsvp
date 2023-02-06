@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import axios from 'axios';
-import { DataContext, IGuest } from '../../dataContext';
+import { DataContext } from '../../dataContext';
 
 const EmailInput: React.FC = () => {
 	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
@@ -17,6 +17,7 @@ const EmailInput: React.FC = () => {
 					...formState,
 					isReturning: true,
 					isFormHidden: true,
+					isClickedForFoodRestrictions: true,
 					isSubmitted: true,
 				});
 			} else {

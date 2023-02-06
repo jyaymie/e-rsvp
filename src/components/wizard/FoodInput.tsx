@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { DataContext } from '../../dataContext';
 
-const RestrictionsInput: React.FC = () => {
+const FoodInput: React.FC = () => {
 	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
 
 	return (
@@ -48,10 +48,19 @@ const RestrictionsInput: React.FC = () => {
 						required
 					/>
 					<button
-						className={formState.isClicked ? 'button--hidden' : 'button'}
+						className={
+							formState.isClickedForFoodRestrictions
+								? 'button--hidden'
+								: 'button'
+						}
 						type='button'
 						value='Next'
-						onClick={() => setFormState({ ...formState, isClicked: true })}>
+						onClick={() =>
+							setFormState({
+								...formState,
+								isClickedForFoodRestrictions: true,
+							})
+						}>
 						NEXT
 					</button>
 				</>
@@ -60,4 +69,4 @@ const RestrictionsInput: React.FC = () => {
 	);
 };
 
-export default RestrictionsInput;
+export default FoodInput;
