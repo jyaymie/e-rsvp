@@ -8,27 +8,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
 
-// GET: Retrieve all guests
-// app.get('/guests', (req, res) => {
-// 	db.all('SELECT * FROM guest', [], (err, rows) => {
-// 		if (err) {
-// 			res.status(400).json({ 'Error getting all guests': err.message });
-// 			return;
-// 		}
-// 		res.status(200).json({ rows });
-// 	});
-// });
-
-// GET: Retrieve guest by email
+// GET: Retrieve all guests or single guest by email
 app.get('/guests', (req, res) => {
 	const email = req.query.email;
-	db.all('SELECT * FROM guest WHERE email = ?', [email], (err, rows) => {
-		if (err) {
-			res.status(400).json({ 'Error retrieving guest': err.message });
-			return;
-		}
-		res.status(200).json({ rows });
-	});
+	if (!email) {
+		db.all('SELECT * FROM guest', [], (err, rows) => {
+			if (err) {
+				res.status(400).json({ 'Error getting all guests': err.message });
+				return;
+			}
+			res.status(200).json({ rows });
+		});
+	} else {
+		db.all('SELECT * FROM guest WHERE email = ?', [email], (err, rows) => {
+			if (err) {
+				res.status(400).json({ 'Error retrieving guest': err.message });
+				return;
+			}
+			res.status(200).json({ rows });
+		});
+	}
 });
 
 // GET: Retrieve guest by id
@@ -109,7 +108,13 @@ app.put('/guests/:id', (req, res, next) => {
 				res.status(400).json({ 'Error updating guest': err.message });
 				return;
 			}
-			res.status(200).json({ rows });
+			db.all('SELECT * FROM guest', [], (err, rows) => {
+				if (err) {
+					res.status(400).json({ 'Error retrieving guest': err.message });
+					return;
+				}
+				res.status(200).json({ rows });
+			});
 		}
 	);
 });

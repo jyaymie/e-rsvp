@@ -1,12 +1,12 @@
-import { createContext, useState } from 'react';
+import { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import './App.css';
-import './colors.css';
 import Dashboard from './components/Dashboard';
 import Header from './components/Header';
 import Home from './components/Home';
 import RsvpForm from './components/RsvpForm';
 import SignIn from './components/SignIn';
+import './App.css';
+import './colors.css';
 
 import { DataContext, IFormState, IGuest } from './dataContext';
 
@@ -22,7 +22,7 @@ function App() {
 	});
 
 	const [guest, setGuest] = useState<IGuest>({
-		guest_id: '',
+		guest_id: null,
 		name: '',
 		email: '',
 		is_attending: null,

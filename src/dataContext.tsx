@@ -13,7 +13,7 @@ export interface IFormState {
 // With SQLite, Boolean values are stored as integers 0 (false) and 1 (true).
 
 export interface IGuest {
-	guest_id: string;
+	guest_id: number | null;
 	name: string;
 	email: string;
 	is_attending: number | null;
@@ -40,7 +40,7 @@ export const DataContext = createContext<{
 	},
 	setFormState: () => {},
 	guest: {
-		guest_id: '',
+		guest_id: null,
 		name: '',
 		email: '',
 		is_attending: null,
