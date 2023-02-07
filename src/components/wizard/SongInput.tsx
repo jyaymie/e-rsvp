@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { DataContext } from '../../dataContext';
 
-const SongInput: React.FC = () => {
+const SongInput: FC = () => {
 	const { guest, setGuest } = useContext(DataContext);
 
 	return (

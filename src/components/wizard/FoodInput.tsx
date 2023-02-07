@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { DataContext } from '../../dataContext';
 
-const FoodInput: React.FC = () => {
+const FoodInput: FC = () => {
 	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
 
 	return (

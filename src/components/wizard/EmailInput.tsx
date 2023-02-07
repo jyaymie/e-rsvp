@@ -1,8 +1,8 @@
-import { useContext } from 'react';
-import axios from 'axios';
+import { FC, useContext } from 'react';
 import { DataContext } from '../../dataContext';
+import axios from 'axios';
 
-const EmailInput: React.FC = () => {
+const EmailInput: FC = () => {
 	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
 
 	// Confirm that guest has been added to DB by host.
@@ -17,11 +17,12 @@ const EmailInput: React.FC = () => {
 					...formState,
 					isReturning: true,
 					isFormHidden: true,
+					error: '',
 					isClickedForFoodRestrictions: true,
 					isSubmitted: true,
 				});
 			} else {
-				setFormState({ ...formState, isInputHidden: true });
+				setFormState({ ...formState, isInputHidden: true, error: '' });
 			}
 		} else {
 			setFormState({

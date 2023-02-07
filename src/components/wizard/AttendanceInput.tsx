@@ -1,7 +1,7 @@
-import { useContext } from 'react';
+import { FC, useContext } from 'react';
 import { DataContext } from '../../dataContext';
 
-const AttendanceInput: React.FC = () => {
+const AttendanceInput: FC = () => {
 	const { guest, setGuest } = useContext(DataContext);
 
 	return (

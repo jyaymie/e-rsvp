@@ -1,14 +1,14 @@
-import { useContext, useEffect } from 'react';
-import axios from 'axios';
+import { FC, useContext, useEffect } from 'react';
 import { DataContext, IGuest } from '../dataContext';
-import EmailInput from './wizard/EmailInput';
+import axios from 'axios';
 import AttendanceInput from './wizard/AttendanceInput';
-import HotelInput from './wizard/HotelInput';
+import EmailInput from './wizard/EmailInput';
 import EntreeInput from './wizard/EntreeInput';
 import FoodInput from './wizard/FoodInput';
+import HotelInput from './wizard/HotelInput';
 import SongInput from './wizard/SongInput';
 
-const RsvpForm: React.FC = () => {
+const RsvpForm: FC = () => {
 	const { formState, setFormState, guest, setGuest } = useContext(DataContext);
 
 	useEffect(() => {
@@ -52,6 +52,7 @@ const RsvpForm: React.FC = () => {
 				...formState,
 				isFormHidden: false,
 				isInputHidden: true,
+				error: '',
 				hasFoodRestrictions: false,
 				isSubmitted: false,
 			});
