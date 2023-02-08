@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { IGuest } from '../dataContext';
 import axios from 'axios';
+import RsvpDataVisual from './RsvpDataVisual';
 
 interface IDisplayState {
 	addGuestForm: boolean;
@@ -24,12 +25,34 @@ const Dashboard: FC = () => {
 		guestList: false,
 	});
 	const [email, setEmail] = useState<string>('');
+	const [chartData, setChartData] = useState<number[]>([]);
+
+	let numOfAccepts = 0;
+	let numOfRegrets = 0;
+	let numOfNoResponses = 0;
 
 	useEffect(() => {
 		const getGuests = async () => {
 			const res = await axios.get(`http://localhost:3001/guests`);
 			if (res.status === 200) {
 				setGuests(res.data.rows);
+				const rows = res.data.rows;
+
+				const guestsAttending = rows.filter(
+					(guest: IGuest) => guest.is_attending === 1
+				);
+				const guestsNotAttending = rows.filter(
+					(guest: IGuest) => guest.is_attending === 0
+				);
+				const guestsWithoutResponse = rows.filter(
+					(guest: IGuest) => guest.is_attending === null
+				);
+
+				numOfAccepts = guestsAttending.length;
+				numOfRegrets = guestsNotAttending.length;
+				numOfNoResponses = guestsWithoutResponse.length;
+
+				setChartData([numOfAccepts, numOfRegrets, numOfNoResponses]);
 			}
 		};
 		getGuests();
@@ -87,6 +110,40 @@ const Dashboard: FC = () => {
 				return guest;
 			})
 		);
+	};
+
+	const handleChartData = (totals: number[]) => {
+		return {
+			labels: ['Accepts', 'Regrets', 'No Response'],
+			datasets: [
+				{
+					label: '# of Guests',
+					data: totals,
+					backgroundColor: ['#9adbc5', '#f886a8', '#fdc453'],
+				},
+			],
+		};
+	};
+
+	const options = {
+		plugins: {
+			title: {
+				display: true,
+				text: 'Track Your RSVPs',
+				color: 'black',
+				font: {
+					size: 25,
+				},
+				padding: {
+					top: 30,
+					bottom: 30,
+				},
+				responsive: true,
+				animation: {
+					animateScale: true,
+				},
+			},
+		},
 	};
 
 	return (
@@ -204,6 +261,12 @@ const Dashboard: FC = () => {
 						)}
 					</div>
 				))}
+			<div>
+				<RsvpDataVisual
+					data={handleChartData(chartData)}
+					options={options}
+				/>
+			</div>
 		</div>
 	);
 };
